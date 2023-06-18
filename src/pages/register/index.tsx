@@ -11,7 +11,7 @@ export default function Register() {
   return (
     <>
       <Head>
-        <title>FishPizzaria - Login</title>
+        <title>FishPizzaria - Register</title>
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
         <div className="flex flex-col items-center justify-center space-y-5 rounded-xl border border-gray-400/80 px-5 py-10">

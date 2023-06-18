@@ -1,13 +1,33 @@
+import { FormEvent, useContext, useState } from 'react'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import Head from 'next/head'
 
 import logoFishPizzaria from '../../public/logo.svg'
 
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
-import Head from 'next/head'
+import { AuthContext } from '@/contexts/AuthContext'
 
 export default function Home() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  // const [loading, setLoading] = useState(false)
+
+  const { signIn } = useContext(AuthContext)
+
+  async function handleForm(event: FormEvent) {
+    event.preventDefault()
+
+    const data = {
+      email,
+      password,
+    }
+
+    signIn(data)
+  }
+
   return (
     <>
       <Head>
@@ -20,9 +40,24 @@ export default function Home() {
           <h1 className="text-3xl font-semibold">LOGIN</h1>
 
           <div className="flex w-[500px] flex-col items-center justify-center space-y-5">
-            <form className="flex w-[80%] flex-col space-y-3">
-              <Input type="email" placeholder="Email" required />
-              <Input type="password" placeholder="Password" required />
+            <form
+              onSubmit={handleForm}
+              className="flex w-[80%] flex-col space-y-3"
+            >
+              <Input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="Email"
+                required
+              />
+              <Input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Password"
+                required
+              />
               <Button type="submit" loading={false}>
                 ACCESS
               </Button>
