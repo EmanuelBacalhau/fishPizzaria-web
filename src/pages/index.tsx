@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/Button'
 import { AuthContext } from '@/contexts/AuthContext'
 
 import { toast } from 'react-toastify'
+import { canSSRGuest } from '@/utils/canSSRGuest'
 
 export default function Home() {
   const [email, setEmail] = useState('')
@@ -86,3 +87,9 @@ export default function Home() {
     </>
   )
 }
+
+export const getServerSideProps = canSSRGuest(async (ctx) => {
+  return {
+    props: {},
+  }
+})

@@ -79,7 +79,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
       Router.push('/dashboard')
     } catch (error) {
-      toast.error('Email/Password incorrect!')
+      toast.error('E-mail/Senha incorreta!')
     }
   }
 
