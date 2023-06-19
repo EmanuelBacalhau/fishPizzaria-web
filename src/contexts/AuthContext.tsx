@@ -39,40 +39,28 @@ interface AuthProviderProps {
   children: ReactNode
 }
 
-function useUserData() {
-  const [user, setUser] = useState<UserProps>()
-
-  const insert = (currentUser: UserProps) => {
-    setUser(currentUser)
-  }
-
-  return { user, insert }
-}
-
 export function AuthContextProvider({ children }: AuthProviderProps) {
-  const { user, insert } = useUserData()
+  const [user, setUser] = useState<UserProps>()
 
   const currentUser = user as UserProps
 
   const isAuthenticated = !!user
 
   useEffect(() => {
-    const KEY_TOKEN = process.env.NEXT_PUBLIC_KEY_TOKEN as string
-    const { KEY_TOKEN: token } = parseCookies()
+    const { '@nextAuth_fishPizzaria.token': token } = parseCookies()
 
     if (token) {
       api
         .get('/me')
         .then((response) => {
           const { id, name, email } = response.data
-
-          insert({ id, name, email })
+          setUser({ id, name, email })
         })
         .catch(() => {
           signOut()
         })
     }
-  })
+  }, [])
 
   async function signIn({ email, password }: SignInProps) {
     try {
@@ -85,7 +73,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
         path: '/',
       })
 
-      insert({
+      setUser({
         id,
         name,
         email,
@@ -124,7 +112,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
 export function signOut() {
   try {
-    destroyCookie(undefined, process.env.KEY_TOKEN as string)
+    destroyCookie(undefined, process.env.NEXT_PUBLIC_KEY_TOKEN as string)
     Router.push('/')
   } catch (error) {
     console.log('Error ao deslogar')

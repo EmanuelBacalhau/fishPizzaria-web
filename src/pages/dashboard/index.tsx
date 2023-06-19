@@ -1,3 +1,4 @@
+import { Header } from '@/components/Header'
 import { canSSRAuth } from '@/utils/canSSRAuth'
 import Head from 'next/head'
 
@@ -8,6 +9,7 @@ export default function Dashboard() {
         <title>FishPizzaria - Dashboard</title>
       </Head>
       <main>
+        <Header />
         <h1>Bem-vindo ao painel</h1>
       </main>
     </>
