@@ -1,3 +1,5 @@
+import { FormEvent, useState } from 'react'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import Head from 'next/head'
@@ -8,6 +10,28 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 
 export default function Register() {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const [loading, setLoading] = useState(false)
+
+  async function handleForm(event: FormEvent) {
+    event.preventDefault()
+
+    if (name === '' || email === '' || password === '') {
+      return
+    }
+
+    setLoading(true)
+
+    const data = {
+      name,
+      email,
+      password,
+    }
+  }
+
   return (
     <>
       <Head>
@@ -20,11 +44,34 @@ export default function Register() {
           <h1 className="text-3xl font-semibold">REGISTER</h1>
 
           <div className="flex w-[500px] flex-col items-center justify-center space-y-5">
-            <form className="flex w-[80%] flex-col space-y-3">
-              <Input type="text" placeholder="Name" required />
-              <Input type="email" placeholder="Email" required />
-              <Input type="password" placeholder="Password" required />
-              <Button loading={false}>REGISTER</Button>
+            <form
+              onSubmit={handleForm}
+              className="flex w-[80%] flex-col space-y-3"
+            >
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                type="text"
+                placeholder="Name"
+                required
+              />
+              <Input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="Email"
+                required
+              />
+              <Input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Password"
+                required
+              />
+              <Button type="submit" loading={loading}>
+                REGISTER
+              </Button>
             </form>
 
             <Link

@@ -13,12 +13,18 @@ import { AuthContext } from '@/contexts/AuthContext'
 export default function Home() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  // const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const { signIn } = useContext(AuthContext)
 
   async function handleForm(event: FormEvent) {
     event.preventDefault()
+
+    if (email === '' || password === '') {
+      return
+    }
+
+    setLoading(true)
 
     const data = {
       email,
@@ -26,6 +32,8 @@ export default function Home() {
     }
 
     signIn(data)
+
+    setLoading(false)
   }
 
   return (
@@ -58,7 +66,7 @@ export default function Home() {
                 placeholder="Password"
                 required
               />
-              <Button type="submit" loading={false}>
+              <Button type="submit" loading={loading}>
                 ACCESS
               </Button>
             </form>
