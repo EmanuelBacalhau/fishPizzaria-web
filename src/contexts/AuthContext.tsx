@@ -1,3 +1,5 @@
+import Router from 'next/router'
+import { destroyCookie } from 'nookies'
 import { createContext, ReactNode, useState } from 'react'
 
 interface UserProps {
@@ -15,6 +17,7 @@ interface AuthContextProps {
   user: UserProps
   isAuthenticated: boolean
   signIn: (credentials: SignInProps) => Promise<void>
+  signOut: () => void
 }
 
 export const AuthContext = createContext({} as AuthContextProps)
@@ -46,9 +49,18 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ signIn, isAuthenticated, user: currentUser }}
+      value={{ signIn, isAuthenticated, user: currentUser, signOut }}
     >
       {children}
     </AuthContext.Provider>
   )
+}
+
+export function signOut() {
+  try {
+    destroyCookie(undefined, process.env.KEY_TOKEN as string)
+    Router.push('/')
+  } catch (error) {
+    console.log('Error ao deslogar')
+  }
 }
