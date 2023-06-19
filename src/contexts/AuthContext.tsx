@@ -1,8 +1,8 @@
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useEffect, useState } from 'react'
 
 import Router from 'next/router'
 
-import { destroyCookie, setCookie } from 'nookies'
+import { destroyCookie, parseCookies, setCookie } from 'nookies'
 
 import { api } from '@/services/api'
 
@@ -55,6 +55,24 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
   const currentUser = user as UserProps
 
   const isAuthenticated = !!user
+
+  useEffect(() => {
+    const KEY_TOKEN = process.env.NEXT_PUBLIC_KEY_TOKEN as string
+    const { KEY_TOKEN: token } = parseCookies()
+
+    if (token) {
+      api
+        .get('/me')
+        .then((response) => {
+          const { id, name, email } = response.data
+
+          insert({ id, name, email })
+        })
+        .catch(() => {
+          signOut()
+        })
+    }
+  })
 
   async function signIn({ email, password }: SignInProps) {
     try {
