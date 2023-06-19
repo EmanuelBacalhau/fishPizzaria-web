@@ -4,7 +4,7 @@ import { signOut } from '@/contexts/AuthContext'
 
 import { parseCookies } from 'nookies'
 
-export function setupApiClient(ctx = undefined) {
+function setupApiClient(ctx = undefined) {
   const cookies = parseCookies(ctx)
 
   const api = axios.create({

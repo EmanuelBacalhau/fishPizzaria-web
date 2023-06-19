@@ -24,20 +24,25 @@ export default function Register() {
   async function handleForm(event: FormEvent) {
     event.preventDefault()
 
-    if (name.trim() === '') {
-      toast.error('Digite um nome válido!')
+    if (name.trim() === '' || name === '') {
+      toast.error('Enter a valid name!')
       return
     }
 
-    if (password.trim() === '') {
-      toast.error('Digite uma senha válida!')
+    if (email.trim() === '' || email === '') {
+      toast.error('Enter a valid email!')
+      return
+    }
+
+    if (password.trim() === '' || password === '') {
+      toast.error('Enter a valid password!')
       return
     }
 
     setLoading(true)
 
     const data = {
-      name,
+      name: name.trim(),
       email,
       password,
     }

@@ -29,7 +29,7 @@ interface AuthContextProps {
   user: UserProps
   isAuthenticated: boolean
   signIn: (credentials: SignInProps) => Promise<void>
-  signOut: () => void
+  signOut: (name?: string) => void
   signUp: (credentials: SignUpProps) => Promise<void>
 }
 
@@ -81,11 +81,11 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
       api.defaults.headers.Authorization = `Bearer ${token}`
 
-      toast.success(`Seja bem-vindo, ${name}!`)
+      toast.success(`Welcome, ${name}!`)
 
       Router.push('/dashboard')
     } catch (error) {
-      toast.error('E-mail/Senha incorreta!')
+      toast.error('Email/Password incorrect!')
     }
   }
 
@@ -93,11 +93,11 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
     try {
       await api.post('/register', { name, email, password })
 
-      toast.success('Cadastro realizado com sucesso!')
+      toast.success('Registration done successfully!')
 
       Router.push('/')
     } catch (error) {
-      toast.error('Erro ao cadastrar!')
+      toast.error('This email already exists')
     }
   }
 
@@ -110,11 +110,12 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
   )
 }
 
-export function signOut() {
+export function signOut(name?: string) {
   try {
     destroyCookie(undefined, process.env.NEXT_PUBLIC_KEY_TOKEN as string)
+    toast.success(`Until next time${name ? `, ${name}!` : '!'}`)
     Router.push('/')
   } catch (error) {
-    console.log('Error ao deslogar')
+    toast.error('Error exiting')
   }
 }

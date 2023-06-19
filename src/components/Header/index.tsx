@@ -8,7 +8,11 @@ import { useContext } from 'react'
 import { AuthContext } from '@/contexts/AuthContext'
 
 export function Header() {
-  const { signOut } = useContext(AuthContext)
+  const { user, signOut } = useContext(AuthContext)
+
+  function exit() {
+    signOut(user.name)
+  }
 
   return (
     <header className="h-20">
@@ -17,14 +21,14 @@ export function Header() {
           <Image src={logoFishPizzaria} alt="Logo FishPizzaria" width={250} />
         </Link>
 
-        <nav className="flex items-center space-x-4">
+        <nav className="flex items-center space-x-10">
           <Link className="duration-500 hover:text-gray-400" href={'/category'}>
             Category
           </Link>
           <Link className="duration-500 hover:text-gray-400" href={'/product'}>
             Product
           </Link>
-          <button onClick={signOut} className="duration-700 hover:scale-110">
+          <button onClick={exit} className="duration-700 hover:scale-110">
             <FiLogOut color="white" size={24} />
           </button>
         </nav>
