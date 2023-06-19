@@ -17,11 +17,18 @@ interface SignInProps {
   password: string
 }
 
+interface SignUpProps {
+  name: string
+  email: string
+  password: string
+}
+
 interface AuthContextProps {
   user: UserProps
   isAuthenticated: boolean
   signIn: (credentials: SignInProps) => Promise<void>
   signOut: () => void
+  signUp: (credentials: SignUpProps) => Promise<void>
 }
 
 export const AuthContext = createContext({} as AuthContextProps)
@@ -72,9 +79,19 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function signUp({ name, email, password }: SignUpProps) {
+    try {
+      await api.post('/register', { name, email, password })
+
+      Router.push('/')
+    } catch (error) {
+      console.log('Error ao cadastrar ' + error)
+    }
+  }
+
   return (
     <AuthContext.Provider
-      value={{ signIn, isAuthenticated, user: currentUser, signOut }}
+      value={{ signIn, isAuthenticated, user: currentUser, signOut, signUp }}
     >
       {children}
     </AuthContext.Provider>

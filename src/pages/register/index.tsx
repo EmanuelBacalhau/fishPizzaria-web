@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useContext, useState } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,6 +8,7 @@ import logoFishPizzaria from '../../../public/logo.svg'
 
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
+import { AuthContext } from '@/contexts/AuthContext'
 
 export default function Register() {
   const [name, setName] = useState('')
@@ -15,6 +16,8 @@ export default function Register() {
   const [password, setPassword] = useState('')
 
   const [loading, setLoading] = useState(false)
+
+  const { signUp } = useContext(AuthContext)
 
   async function handleForm(event: FormEvent) {
     event.preventDefault()
@@ -30,6 +33,10 @@ export default function Register() {
       email,
       password,
     }
+
+    await signUp(data)
+
+    setLoading(false)
   }
 
   return (
