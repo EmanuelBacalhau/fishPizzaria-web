@@ -70,7 +70,7 @@ export default function Home() {
                 placeholder="Password"
                 required
               />
-              <Button type="submit" loading={loading}>
+              <Button bgColor="bg-dark-red" type="submit" loading={loading}>
                 ACCESS
               </Button>
             </form>

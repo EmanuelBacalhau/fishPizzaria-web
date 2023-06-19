@@ -84,7 +84,7 @@ export default function Register() {
                 placeholder="Password"
                 required
               />
-              <Button type="submit" loading={loading}>
+              <Button bgColor="bg-dark-red" type="submit" loading={loading}>
                 REGISTER
               </Button>
             </form>

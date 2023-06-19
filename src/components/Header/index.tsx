@@ -19,10 +19,10 @@ export function Header() {
 
         <nav className="flex items-center space-x-4">
           <Link className="duration-500 hover:text-gray-400" href={'/category'}>
-            Categorias
+            Category
           </Link>
           <Link className="duration-500 hover:text-gray-400" href={'/product'}>
-            Cardapio
+            Product
           </Link>
           <button onClick={signOut} className="duration-700 hover:scale-110">
             <FiLogOut color="white" size={24} />

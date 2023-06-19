@@ -5,16 +5,17 @@ import { FaSpinner } from 'react-icons/fa'
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
   loading: boolean
+  bgColor: 'bg-dark-red' | 'bg-dark-green'
 }
 
-export function Button({ children, loading, ...rest }: ButtonProps) {
+export function Button({ children, loading, bgColor, ...rest }: ButtonProps) {
   return (
     <button
       disabled={loading}
       className={
         !loading
-          ? 'flex items-center justify-center rounded-md bg-red-dark p-1 font-semibold'
-          : 'flex cursor-not-allowed items-center justify-center rounded-md bg-red-dark p-1'
+          ? `flex items-center justify-center rounded-md ${bgColor} p-1 font-semibold`
+          : `flex cursor-not-allowed items-center justify-center rounded-md ${bgColor} p-1`
       }
       {...rest}
     >
