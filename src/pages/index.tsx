@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { AuthContext } from '@/contexts/AuthContext'
 
+import { toast } from 'react-toastify'
+
 export default function Home() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -20,7 +22,8 @@ export default function Home() {
   async function handleForm(event: FormEvent) {
     event.preventDefault()
 
-    if (email === '' || password === '') {
+    if (password.trim() === '') {
+      toast.error('Digite uma senha válida!')
       return
     }
 

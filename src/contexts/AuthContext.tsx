@@ -6,6 +6,8 @@ import { destroyCookie, setCookie } from 'nookies'
 
 import { api } from '@/services/api'
 
+import { toast } from 'react-toastify'
+
 interface UserProps {
   id: string
   name: string
@@ -73,9 +75,11 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
       api.defaults.headers.Authorization = `Bearer ${token}`
 
+      toast.success(`Seja bem-vindo, ${name}!`)
+
       Router.push('/dashboard')
     } catch (error) {
-      console.log('Error ao acessar ', error)
+      toast.error('Email/Password incorrect!')
     }
   }
 
@@ -83,9 +87,11 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
     try {
       await api.post('/register', { name, email, password })
 
+      toast.success('Cadastro realizado com sucesso!')
+
       Router.push('/')
     } catch (error) {
-      console.log('Error ao cadastrar ' + error)
+      toast.error('Erro ao cadastrar!')
     }
   }
 
