@@ -1,18 +1,18 @@
-import { signOut } from '@/contexts/AuthContext'
 import axios, { AxiosError } from 'axios'
+
+import { signOut } from '@/contexts/AuthContext'
+
 import { parseCookies } from 'nookies'
 
 export function setupApiClient(ctx = undefined) {
   const cookies = parseCookies(ctx)
 
-  console.log(process.env.BASE_URL_API)
-
-  console.log(process.env.KEY_TOKEN)
-
   const api = axios.create({
-    baseURL: process.env.BASE_URL_API,
+    baseURL: process.env.NEXT_PUBLIC_BASE_URL_API,
     headers: {
-      Authorization: `Bearer ${cookies[process.env.KEY_TOKEN as string]}`,
+      Authorization: `Bearer ${
+        cookies[process.env.NEXT_PUBLIC_KEY_TOKEN as string]
+      }`,
     },
   })
 
@@ -34,4 +34,4 @@ export function setupApiClient(ctx = undefined) {
   return api
 }
 
-export default setupApiClient
+export const api = setupApiClient()

@@ -1,6 +1,10 @@
-import Router from 'next/router'
-import { destroyCookie } from 'nookies'
 import { createContext, ReactNode, useState } from 'react'
+
+import Router from 'next/router'
+
+import { destroyCookie, setCookie } from 'nookies'
+
+import { api } from '@/services/api'
 
 interface UserProps {
   id: string
@@ -44,7 +48,28 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
   const isAuthenticated = !!user
 
   async function signIn({ email, password }: SignInProps) {
-    alert(`Email: ${email} / Password: ${password}`)
+    try {
+      const response = await api.post('/login', { email, password })
+
+      const { id, name, token } = response.data
+
+      setCookie(undefined, process.env.NEXT_PUBLIC_KEY_TOKEN as string, token, {
+        maxAge: 60 * 60 * 24 * 30,
+        path: '/',
+      })
+
+      insert({
+        id,
+        name,
+        email,
+      })
+
+      api.defaults.headers.Authorization = `Bearer ${token}`
+
+      Router.push('/dashboard')
+    } catch (error) {
+      console.log('Error ao acessar ', error)
+    }
   }
 
   return (
