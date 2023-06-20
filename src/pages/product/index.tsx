@@ -1,20 +1,32 @@
+import { ChangeEvent, useState } from 'react'
 import Head from 'next/head'
+import { FiUpload } from 'react-icons/fi'
+import { toast } from 'react-toastify'
 
 import Image from 'next/image'
-
-import { FiUpload } from 'react-icons/fi'
 
 import { Header } from '@/components/Header'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { canSSRAuth } from '@/utils/canSSRAuth'
 import { TextArea } from '@/components/ui/TextArea'
-import { ChangeEvent, useState } from 'react'
-import { toast } from 'react-toastify'
+import { setupApiClient } from '@/services/api'
 
-export default function Category() {
+interface ProductProps {
+  id: string
+  name: string
+}
+
+interface CategoryListProps {
+  categoryList: ProductProps[]
+}
+
+export default function Product({ categoryList }: CategoryListProps) {
   const [imageUrl, setImageUrl] = useState<string>()
   const [imageProduct, setImageProduct] = useState<File>()
+
+  const [categories] = useState(categoryList || [])
+  const [categorySelected, setCategorySelected] = useState<number>(0)
 
   function handleFile(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) {
@@ -34,6 +46,10 @@ export default function Category() {
     }
 
     toast.error('Invalid image type')
+  }
+
+  function handleChangeCategory(event: ChangeEvent<HTMLSelectElement>) {
+    setCategorySelected(Number(event.target.value))
   }
 
   return (
@@ -77,9 +93,19 @@ export default function Category() {
               ) : null}
             </label>
 
-            <select className="h-8 rounded-md text-black outline-none">
-              <option selected>Select the category</option>
-              <option>Bebidas</option>
+            <select
+              value={categorySelected}
+              className="h-8 rounded-md text-black outline-none"
+              onChange={handleChangeCategory}
+              placeholder="Select the type of shield"
+            >
+              {categories.map((item, index) => {
+                return (
+                  <option key={item.id} value={index}>
+                    {item.name}
+                  </option>
+                )
+              })}
             </select>
 
             <Input type="text" placeholder="Type product name" required />
@@ -96,7 +122,13 @@ export default function Category() {
 }
 
 export const getServerSideProps = canSSRAuth(async (context) => {
+  const apiClient = setupApiClient(context)
+
+  const response = await apiClient.get('/category')
+
   return {
-    props: {},
+    props: {
+      categoryList: response.data,
+    },
   }
 })
