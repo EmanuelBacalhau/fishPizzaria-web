@@ -8,6 +8,7 @@ import { Header } from '@/components/Header'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { api } from '@/services/api'
+import { canSSRAuth } from '@/utils/canSSRAuth'
 
 export default function Category() {
   const [name, setName] = useState('')
@@ -46,7 +47,7 @@ export default function Category() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               type="text"
-              placeholder="Type your category name"
+              placeholder="Type the category name"
               required
             />
             <Button bgColor={'bg-dark-green'} type="submit" loading={false}>
@@ -58,3 +59,9 @@ export default function Category() {
     </>
   )
 }
+
+export const getServerSideProps = canSSRAuth(async (context) => {
+  return {
+    props: {},
+  }
+})
