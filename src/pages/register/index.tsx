@@ -24,17 +24,17 @@ export default function Register() {
   async function handleForm(event: FormEvent) {
     event.preventDefault()
 
-    if (name.trim() === '' || name === '') {
+    if (!name || name.trim() === '') {
       toast.error('Enter a valid name!')
       return
     }
 
-    if (email.trim() === '' || email === '') {
+    if (email.trim() === '' || !email) {
       toast.error('Enter a valid email!')
       return
     }
 
-    if (password.trim() === '' || password === '') {
+    if (password.trim() === '' || !password) {
       toast.error('Enter a valid password!')
       return
     }
@@ -48,6 +48,7 @@ export default function Register() {
     }
 
     await signUp(data)
+    toast.success('Registration done successfully')
 
     setLoading(false)
   }

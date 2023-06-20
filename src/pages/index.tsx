@@ -23,12 +23,12 @@ export default function Home() {
   async function handleForm(event: FormEvent) {
     event.preventDefault()
 
-    if (email.trim() === '' || email === '') {
+    if (email.trim() === '' || !email) {
       toast.error('Enter a valid email!')
       return
     }
 
-    if (password.trim() === '' || password === '') {
+    if (password.trim() === '' || !password) {
       toast.error('Enter a valid password!')
       return
     }

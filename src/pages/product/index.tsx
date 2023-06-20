@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import Head from 'next/head'
 import { FiUpload } from 'react-icons/fi'
 import { toast } from 'react-toastify'
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { canSSRAuth } from '@/utils/canSSRAuth'
 import { TextArea } from '@/components/ui/TextArea'
-import { setupApiClient } from '@/services/api'
+import { api, setupApiClient } from '@/services/api'
 
 interface ProductProps {
   id: string
@@ -22,11 +22,75 @@ interface CategoryListProps {
 }
 
 export default function Product({ categoryList }: CategoryListProps) {
-  const [imageUrl, setImageUrl] = useState<string>()
   const [imageProduct, setImageProduct] = useState<File>()
+  const [name, setName] = useState<string>()
+  const [price, setPrice] = useState<string>()
+  const [description, setDescription] = useState<string>()
+  const [categorySelected, setCategorySelected] = useState<number>(0)
+
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const [imageUrl, setImageUrl] = useState<string>()
 
   const [categories] = useState(categoryList || [])
-  const [categorySelected, setCategorySelected] = useState<number>(0)
+
+  async function sendData(event: FormEvent) {
+    event.preventDefault()
+
+    setLoading(true)
+
+    if (imageProduct === undefined) {
+      toast.error('Picture is required')
+      setLoading(false)
+      return
+    }
+
+    if (name?.trim() === '' || !name) {
+      toast.error('Name is required')
+      setLoading(false)
+      return
+    }
+
+    if (!price) {
+      toast.error('Price is required')
+      setLoading(false)
+      return
+    }
+
+    if (!description || description.trim() === '') {
+      toast.error('Description is required')
+      setLoading(false)
+      return
+    }
+
+    try {
+      const data = new FormData()
+
+      const categoryId = categories[categorySelected].id
+
+      data.append('name', name)
+      data.append('price', price)
+      data.append('description', description)
+      data.append('categoryId', categoryId)
+      data.append('banner', imageProduct)
+
+      await api.post('/product', data)
+
+      setLoading(false)
+
+      toast.success('Product successfully resgitered!')
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error('Error when registering!')
+        setLoading(false)
+      }
+    }
+
+    setImageUrl('')
+    setName('')
+    setPrice('')
+    setDescription('')
+  }
 
   function handleFile(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) {
@@ -60,7 +124,7 @@ export default function Product({ categoryList }: CategoryListProps) {
       <main className="space-y-10">
         <Header />
         <div className="m-auto flex max-w-[720px] flex-col items-center justify-center">
-          <form className="flex w-[70%] flex-col space-y-2">
+          <form onSubmit={sendData} className="flex w-[70%] flex-col space-y-2">
             <h1 className="text-3xl font-semibold">New product</h1>
 
             <label className=" flex h-40 cursor-pointer items-center justify-center rounded-md bg-white">
@@ -108,10 +172,29 @@ export default function Product({ categoryList }: CategoryListProps) {
               })}
             </select>
 
-            <Input type="text" placeholder="Type product name" required />
-            <Input type="text" placeholder="Type product price" required />
-            <TextArea placeholder="Type the product description" />
-            <Button bgColor={'bg-dark-green'} type="submit" loading={false}>
+            <Input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              type="text"
+              placeholder="Type product name"
+              required
+            />
+            <Input
+              value={price}
+              onChange={(event) => {
+                const currentPrice = event.target.value
+                setPrice(currentPrice)
+              }}
+              type="text"
+              placeholder="Type product price"
+              required
+            />
+            <TextArea
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              placeholder="Type the product description"
+            />
+            <Button bgColor={'bg-dark-green'} type="submit" loading={loading}>
               REGISTER
             </Button>
           </form>
