@@ -11,6 +11,9 @@ module.exports = {
         'dark-red': '#FF0000',
         'dark-green': '#13cd4a',
       },
+      colors: {
+        'dark-green': '#13cd4a',
+      },
     },
   },
   plugins: [],

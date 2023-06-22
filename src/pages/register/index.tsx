@@ -48,7 +48,6 @@ export default function Register() {
     }
 
     await signUp(data)
-    toast.success('Registration done successfully')
 
     setLoading(false)
   }
