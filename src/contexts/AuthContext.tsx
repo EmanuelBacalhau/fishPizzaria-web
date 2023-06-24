@@ -110,10 +110,10 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
   )
 }
 
-export function signOut(name?: string) {
+export function signOut() {
   try {
     destroyCookie(undefined, process.env.NEXT_PUBLIC_KEY_TOKEN as string)
-    toast.success(`Until next time${name ? `, ${name}!` : '!'}`)
+    toast.success(`Until next time!`)
     Router.push('/')
   } catch (error) {
     toast.error('Error exiting')

@@ -8,10 +8,10 @@ import { useContext } from 'react'
 import { AuthContext } from '@/contexts/AuthContext'
 
 export function Header() {
-  const { user, signOut } = useContext(AuthContext)
+  const { signOut } = useContext(AuthContext)
 
   function exit() {
-    signOut(user.name)
+    signOut()
   }
 
   return (

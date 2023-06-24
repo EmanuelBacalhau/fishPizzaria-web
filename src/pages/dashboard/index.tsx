@@ -6,6 +6,7 @@ import Head from 'next/head'
 import { Header } from '@/components/Header'
 import { canSSRAuth } from '@/utils/canSSRAuth'
 import { api, setupApiClient } from '@/services/api'
+import { ModalOrder } from '@/components/ModalOrder'
 
 interface OrderProps {
   id: string
@@ -19,6 +20,20 @@ interface DashboardProps {
 
 export default function Dashboard({ ordersList }: DashboardProps) {
   const [orders, setOrders] = useState<OrderProps[]>(ordersList || [])
+
+  const [isVisible, setVisible] = useState<boolean>(false)
+  const [modalOrder, setModalOrder] = useState<OrderProps>()
+
+  async function sendData(orderId: string) {
+    const response = await api.get<OrderProps>('/order/detail', {
+      params: {
+        orderId,
+      },
+    })
+
+    setModalOrder(response.data)
+    setVisible(true)
+  }
 
   async function refreshOrders() {
     const response = await api.get('/orders')
@@ -42,26 +57,39 @@ export default function Dashboard({ ordersList }: DashboardProps) {
               <FiRefreshCcw className="text-dark-green" size={24} />
             </button>
           </div>
-          {orders.map((order) => {
-            return (
-              <div key={order.id}>
-                <button
-                  className={`flex 
-                  h-12 w-[100%] 
-                  items-center 
-                  space-x-3 
-                  rounded-md
-                  bg-gray-600 
-                  duration-1000
-                  hover:scale-105`}
-                >
-                  <div className="h-[100%] w-3 rounded-l-md bg-dark-green"></div>
-                  <p>Mesa {order.table}</p>
-                </button>
-              </div>
-            )
-          })}
+          {orders.length === 0 ? (
+            <span className="text-center">No orders found</span>
+          ) : (
+            orders.map((order) => {
+              return (
+                <div key={order.id}>
+                  <button
+                    onClick={() => sendData(order.id)}
+                    className={`flex 
+                    h-12 w-[100%] 
+                    items-center 
+                    space-x-3 
+                    rounded-md
+                    bg-gray-600 
+                    duration-1000
+                    hover:scale-105`}
+                  >
+                    <div className="h-[100%] w-3 rounded-l-md bg-dark-green"></div>
+                    <p>Mesa {order.table}</p>
+                  </button>
+                </div>
+              )
+            })
+          )}
         </div>
+        {isVisible ? (
+          <ModalOrder
+            isVisible={isVisible}
+            close={() => setVisible(false)}
+            data={modalOrder!}
+            refreshOrders={refreshOrders}
+          />
+        ) : null}
       </main>
     </>
   )

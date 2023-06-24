@@ -182,7 +182,7 @@ export default function Product({ categoryList }: CategoryListProps) {
             <Input
               value={price}
               onChange={(event) => {
-                const currentPrice = event.target.value
+                const currentPrice = event.target.value.replace(',', '.')
                 setPrice(currentPrice)
               }}
               type="text"
