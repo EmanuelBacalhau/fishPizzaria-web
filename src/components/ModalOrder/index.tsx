@@ -63,7 +63,11 @@ export function ModalOrder({
   }, 0)
 
   async function finishOrder(orderId: string) {
-    await api.patch('/order/finish', { orderId })
+    await api.patch('/order/finish', null, {
+      params: {
+        orderId,
+      },
+    })
     close()
     refreshOrders()
   }
