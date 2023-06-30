@@ -117,7 +117,7 @@ export function ModalOrder({
             return (
               <div
                 key={order.product.id}
-                className="grid grid-cols-3 space-y-2 text-center text-sm text-dark-green"
+                className="grid grid-cols-3 items-center justify-center space-y-2 text-center text-sm text-dark-green"
               >
                 <span>{order.product.name}</span>
                 <span>{order.amount}</span>
